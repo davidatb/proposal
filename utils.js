@@ -4,7 +4,7 @@ import 'chartjs-adapter-luxon';
 import {valueOrDefault} from '../../dist/helpers.mjs';
 
 // Adapted from http://indiegamr.com/generate-repeatable-random-numbers-in-js/
-var _seed = Date.now();
+let _seed = Date.now();
 
 export function srand(seed) {
   _seed = seed;
@@ -18,16 +18,16 @@ export function rand(min, max) {
 }
 
 export function numbers(config) {
-  var cfg = config || {};
-  var min = valueOrDefault(cfg.min, 0);
-  var max = valueOrDefault(cfg.max, 100);
-  var from = valueOrDefault(cfg.from, []);
-  var count = valueOrDefault(cfg.count, 8);
-  var decimals = valueOrDefault(cfg.decimals, 8);
-  var continuity = valueOrDefault(cfg.continuity, 1);
-  var dfactor = Math.pow(10, decimals) || 0;
-  var data = [];
-  var i, value;
+  let cfg = config || {};
+  let min = valueOrDefault(cfg.min, 0);
+  let max = valueOrDefault(cfg.max, 100);
+  let from = valueOrDefault(cfg.from, []);
+  let count = valueOrDefault(cfg.count, 8);
+  let decimals = valueOrDefault(cfg.decimals, 8);
+  let continuity = valueOrDefault(cfg.continuity, 1);
+  let dfactor = Math.pow(10, decimals) || 0;
+  let data = [];
+  let i, value;
 
   for (i = 0; i < count; ++i) {
     value = (from[i] || 0) + this.rand(min, max);
@@ -55,16 +55,16 @@ export function bubbles(config) {
 }
 
 export function labels(config) {
-  var cfg = config || {};
-  var min = cfg.min || 0;
-  var max = cfg.max || 100;
-  var count = cfg.count || 8;
-  var step = (max - min) / count;
-  var decimals = cfg.decimals || 8;
-  var dfactor = Math.pow(10, decimals) || 0;
-  var prefix = cfg.prefix || '';
-  var values = [];
-  var i;
+  let cfg = config || {};
+  let min = cfg.min || 0;
+  let max = cfg.max || 100;
+  let count = cfg.count || 8;
+  let step = (max - min) / count;
+  let decimals = cfg.decimals || 8;
+  let dfactor = Math.pow(10, decimals) || 0;
+  let prefix = cfg.prefix || '';
+  let values = [];
+  let i;
 
   for (i = min; i < max; i += step) {
     values.push(prefix + Math.round(dfactor * i) / dfactor);
@@ -89,11 +89,11 @@ const MONTHS = [
 ];
 
 export function months(config) {
-  var cfg = config || {};
-  var count = cfg.count || 12;
-  var section = cfg.section;
-  var values = [];
-  var i, value;
+  let cfg = config || {};
+  let count = cfg.count || 12;
+  let section = cfg.section;
+  let values = [];
+  let i, value;
 
   for (i = 0; i < count; ++i) {
     value = MONTHS[Math.ceil(i) % 12];
@@ -120,7 +120,7 @@ export function color(index) {
 }
 
 export function transparentize(value, opacity) {
-  var alpha = opacity === undefined ? 0.5 : 1 - opacity;
+  let alpha = opacity === undefined ? 0.5 : 1 - opacity;
   return colorLib(value).alpha(alpha).rgbString();
 }
 
