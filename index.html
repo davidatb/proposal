@@ -81,7 +81,28 @@
       // scrollButtons plugin block
       const scrollButtons = {
         id: "scrollButtons",
+        afterEvent(chart, args) {
+          const {
+            ctx,
+            canvas,
+            data,
+            chartArea: { top, bottom, left, right, height },
+            scales: { x },
+          } = chart;
 
+          canvas.addEventListener("mousemove", (event) => {
+            const xCoor = args.event.x;
+            const yCoor = args.event.y;
+
+            if (xCoor >= left - 18 && xCoor <= left + 18 && yCoor >= top + height / 2 - 18 && yCoor <= top + height / 2 + 18) {
+              canvas.style.cursor = "pointer";
+            } else if (xCoor >= right - 18 && xCoor <= right + 18 && yCoor >= top + height / 2 - 18 && yCoor <= top + height / 2 + 18) {
+              canvas.style.cursor = "pointer";
+            } else {
+              canvas.style.cursor = "default";
+            }
+          });
+        },
         afterDatasetsDraw(chart, args, pluginOptions) {
           const {
             ctx,
@@ -91,21 +112,33 @@
           } = chart;
 
           ctx.save();
+          const lasValue = data.labels.length - 1;
 
           const angle = Math.PI / 180;
-          const radius = 15;
+          const radius = 18;
 
-          function buttons() {
+          function buttons(x, y, r, aS, aE, text) {
             ctx.beginPath();
             ctx.lineWidth = 3;
             ctx.strokeStyle = "#ff1a68";
-            ctx.fillStyle = 'white';
-            ctx.arc(left, top + (height / 2), radius, 0, angle * 360, false);
+            ctx.fillStyle = "white";
+            ctx.arc(x, y, r, aS, aE, false);
             ctx.closePath();
             ctx.stroke();
             ctx.fill();
+
+            ctx.font = "bold 20px sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillStyle = "#ff1a68";
+            ctx.fillText(text, x, y);
+            ctx.restore();
           }
-          buttons();
+          if (x.min > 0) {
+            buttons(left, top + height / 2, radius, 0, angle * 360, "-");
+          }
+          if (x.max < lasValue) {
+            buttons(right, top + height / 2, radius, 0, angle * 360, "+");
+          }
         },
       };
 
@@ -114,7 +147,13 @@
         type: "bar",
         data,
         options: {
+          layout: {
+            padding: {
+              right: 20,
+            },
+          },
           scales: {
+            x: { min: 3, max: 6 },
             y: {
               beginAtZero: true,
             },
@@ -125,6 +164,20 @@
 
       // render init block
       const myChart = new Chart(document.getElementById("myChart"), config);
+      function scrollEffect(click) {
+        console.log(click);
+        const {
+          ctx,
+          canvas,
+          chartArea: { top, bottom, left, right, height },
+          scales: { x },
+        } = chart;
+        const xCoor = args.event.x;
+        const yCoor = args.event.y;
+      }
+      myChart.canvas.addEventListener("click", (e) => {
+        scrollEffect(e);
+      });
     </script>
   </body>
 </html>
