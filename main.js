@@ -1,5 +1,6 @@
 // Globales
 Chart.defaults.color = '#011502';
+Chart.defaults.font.size = 8;
 
 const labels = ["AROARRENDADORA",
 "BCCSALUD",
@@ -953,12 +954,13 @@ const plugin = {
   };
 
 const config = {
-  type: "polarArea",
+  type: "bar",
   data: data,
   options: {
+    indexAxis: 'y',
     plugins: {
         legend: {
-            position: 'bottom',
+            position: 'left',
             align: 'center',
         },
         tooltip: {backgroundColor: 'DarkSlateGray'},
