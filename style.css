@@ -7,7 +7,7 @@
     width: 100vw;
     height: 40px;
     background: #1a1a1a;
-    color: rgba(255, 26, 104, 1);
+    color: white;
   }
   .chartMenu p {
     padding: 10px;
@@ -17,7 +17,7 @@
   .chartCard {
     width: 100vw;
     height: calc(100vh - 40px);
-    background: rgba(255, 26, 104, 0.2);
+    background: rgba(97, 135, 171, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -26,6 +26,6 @@
     width: 80%;
     padding: 20px;
     border-radius: 20px;
-    border: solid 3px rgba(255, 26, 104, 1);
+    border: solid 3px rgba(3, 4, 94, 1);
     background: white;
   }
