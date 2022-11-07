@@ -165,15 +165,24 @@
       // render init block
       const myChart = new Chart(document.getElementById("myChart"), config);
       function scrollEffect(click) {
-        console.log(click);
         const {
           ctx,
+          data,
           canvas,
           chartArea: { top, bottom, left, right, height },
           scales: { x },
-        } = chart;
-        const xCoor = args.event.x;
-        const yCoor = args.event.y;
+        } = myChart;
+        const xCoor = click.offsetX;
+        const yCoor = click.offsetY;
+        const lasValue = data.labels.length - 1;
+
+        if(myChart.options.scales.x.min > 0) {
+          if(xCoor >= left - 18 && xCoor <= left + 18 && yCoor >= top + height / 2 - 18 && yCoor <= top + height / 2 + 18) {
+            myChart.options.scales.x.min = myChart.options.scales.x.min - 1;
+            myChart.options.scales.x.max = myChart.options.scales.x.max - 1;
+          }
+        }
+        myChart.update();
       }
       myChart.canvas.addEventListener("click", (e) => {
         scrollEffect(e);
