@@ -656,7 +656,7 @@ window.addEventListener("resize", (e) => {
   myChart.resize();
 });
 
-// Descargar canvas a imagen
+// Download canvas to image block
 function download() {
   var link = document.createElement("a");
   link.download = "resumen-general.png";
