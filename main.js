@@ -560,6 +560,7 @@ const scrollButtons = {
     ctx.save();
     const lasValue = data.labels.length - 1;
 
+    // renderiza los botones
     const angle = Math.PI / 180;
     const radius = 18;
     const strokeButton = "#03045E";
@@ -573,13 +574,13 @@ const scrollButtons = {
       ctx.closePath();
       ctx.stroke();
       ctx.fill();
-
       ctx.font = "bold 20px sans-serif";
       ctx.textAlign = "center";
       ctx.fillStyle = strokeButton;
       ctx.fillText(text, x, y);
       ctx.restore();
     }
+
     if (x.min > 0) {
       buttons(left, top + height / 2, radius, 0, angle * 360, "-");
     }
@@ -591,7 +592,7 @@ const scrollButtons = {
 
 // config
 const config = {
-  type: "line",
+  type: "bar",
   data,
   options: {
     // barThickness: 50,
@@ -601,7 +602,7 @@ const config = {
       },
     },
     scales: {
-      x: { min: 0, max: 20 },
+      x: { min: 80, max: 90 },
       y: {
         beginAtZero: true,
       },
@@ -654,3 +655,11 @@ myChart.canvas.addEventListener("click", (e) => {
 window.addEventListener("resize", (e) => {
   myChart.resize();
 });
+
+// Descargar canvas a imagen
+function download() {
+  var link = document.createElement("a");
+  link.download = "resumen-general.png";
+  link.href = myChart.toBase64Image();
+  link.click();
+}
