@@ -663,3 +663,48 @@ function download() {
   link.href = myChart.toBase64Image();
   link.click();
 }
+
+// Position of max and min values in array datos
+function posMaxMin(datos) {
+  let max = datos[0];
+  let min = datos[0];
+  let posMax = 0;
+  let posMin = 0;
+  for (let i = 1; i < datos.length; i++) {
+    if (datos[i] > max) {
+      max = datos[i];
+      posMax = i;
+    }
+    if (datos[i] < min) {
+      min = datos[i];
+      posMin = i;
+    }
+  } return [posMax, posMin];
+}
+
+// Move view to the maximum value of the chart
+function MaxValue() {
+  let pos = posMaxMin(datos);
+  myChart.options.scales.x.min = pos[0] - 5;
+  myChart.options.scales.x.max = pos[0] + 5;
+  myChart.update();
+}
+
+// Move view to the minimum value of the chart
+function MinValue() {
+  let pos = posMaxMin(datos);
+  myChart.options.scales.x.min = pos[1] - 5;
+  myChart.options.scales.x.max = pos[1] + 5;
+  myChart.update();
+}
+
+// Searcher on real time for a chart label and move the view to closest
+document.getElementById("buscador").addEventListener("keyup", (e) => {
+  let buscador = e.target.value;
+  let pos = data.labels.indexOf(buscador);
+  if (pos > -1) {
+    myChart.options.scales.x.min = pos - 5;
+    myChart.options.scales.x.max = pos + 5;
+    myChart.update();
+  }
+});
