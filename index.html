@@ -3,25 +3,29 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
     <title>Buttons scroll</title>
   </head>
   <body>
     <div class="chartMenu">
       <p>Proposal</p>
     </div>
-    <div class="search"><input type="search" name="buscador" id="buscador"></div>
+    <form class="search">
+      <input placeholder="Buscar cliente" type="search" name="buscador" id="buscador" class="cssBuscador" />
+      <input placeholder="Buscar cantidad" type="search" name="buscador" id="" class="cssBuscador"/>
+    </form>
     <div class="chartCard">
       <div class="chartBox">
         <canvas id="myChart"></canvas>
       </div>
       <div class="podium">
-        <button onclick="download()">Descargar</button>
+        <button onclick="download()">Descargar PNG</button>
+        <button onclick="download_jpg()">Descargar JPG</button>
         <button onclick="MaxValue()">Valor maximo</button>
         <button onclick="MinValue()">Valor minimo</button>
       </div>
     </div>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="main.js" ></script>
+    <script src="main.js"></script>
   </body>
 </html>

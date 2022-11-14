@@ -558,6 +558,7 @@ const scrollButtons = {
     } = chart;
 
     ctx.save();
+    
     const lasValue = data.labels.length - 1;
 
     // renderiza los botones
@@ -590,6 +591,19 @@ const scrollButtons = {
   },
 };
 
+// Note: changes to the plugin code is not reflected to the chart, because the plugin is loaded at chart construction time and editor changes only trigger an chart.update().
+const background_plugin = {
+  id: 'custom_canvas_background_color',
+  beforeDraw: (chart) => {
+    const {ctx} = chart;
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-over';
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, chart.width, chart.height);
+    ctx.restore();
+  }
+};
+
 // config
 const config = {
   type: "bar",
@@ -608,7 +622,7 @@ const config = {
       },
     },
   },
-  plugins: [scrollButtons],
+  plugins: [scrollButtons, background_plugin],
 };
 
 // render init block
@@ -664,6 +678,13 @@ function download() {
   link.click();
 }
 
+function download_jpg() {
+  var link = document.createElement("a");
+  link.download = "resumen-general.jpg";
+  link.href = myChart.toBase64Image();
+  link.click();
+}
+
 // Position of max and min values in array datos
 function posMaxMin(datos) {
   let max = datos[0];
@@ -685,6 +706,7 @@ function posMaxMin(datos) {
 // Move view to the maximum value of the chart
 function MaxValue() {
   let pos = posMaxMin(datos);
+  console.log(labels[pos[0]]);
   myChart.options.scales.x.min = pos[0] - 5;
   myChart.options.scales.x.max = pos[0] + 5;
   myChart.update();
@@ -693,12 +715,13 @@ function MaxValue() {
 // Move view to the minimum value of the chart
 function MinValue() {
   let pos = posMaxMin(datos);
+  console.log(labels[pos[1]]);
   myChart.options.scales.x.min = pos[1] - 5;
   myChart.options.scales.x.max = pos[1] + 5;
   myChart.update();
 }
 
-// Searcher on real time for a chart label and move the view to closest
+// Searcher on real time for a chart label and move the view to closest instant search
 document.getElementById("buscador").addEventListener("keyup", (e) => {
   let buscador = e.target.value;
   let pos = data.labels.indexOf(buscador);
@@ -706,5 +729,26 @@ document.getElementById("buscador").addEventListener("keyup", (e) => {
     myChart.options.scales.x.min = pos - 5;
     myChart.options.scales.x.max = pos + 5;
     myChart.update();
+  } else {
+    let pos = data.labels.findIndex((element) => element.includes(buscador));
+    if (pos > -1) {
+      myChart.options.scales.x.min = pos - 5;
+      myChart.options.scales.x.max = pos + 5;
+      myChart.update();
+    }
   }
 });
+
+
+
+// Searcher on real time with regex and find for chart labels and move the view
+// document.getElementById("buscador").addEventListener("keyup", (e) => {
+//   let buscador = e.target.value;
+//   let regex = new RegExp(buscador, "i");
+//   let pos = data.labels.findIndex((element) => regex.test(element));
+//   if (pos > -1) {
+//     myChart.options.scales.x.min = pos - 5;
+//     myChart.options.scales.x.max = pos + 5;
+//     myChart.update();
+//   }
+// } );
