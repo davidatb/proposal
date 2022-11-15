@@ -739,6 +739,24 @@ document.getElementById("buscador").addEventListener("keyup", (e) => {
   }
 });
 
+// Searcher on real time for chart values and move the view to closest whit map method
+document.getElementById("buscador2").addEventListener("keyup", (e) => {
+  let buscador = e.target.value;
+  let pos = datos.map((element) => element.toString()).indexOf(buscador);
+  if (pos > -1) {
+    myChart.options.scales.x.min = pos - 5;
+    myChart.options.scales.x.max = pos + 5;
+    myChart.update();
+  } else {
+    let pos = datos.map((element) => element.toString()).findIndex((element) => element.includes(buscador));
+    if (pos > -1) {
+      myChart.options.scales.x.min = pos - 5;
+      myChart.options.scales.x.max = pos + 5;
+      myChart.update();
+    }
+  }
+});
+
 
 
 // Searcher on real time with regex and find for chart labels and move the view
