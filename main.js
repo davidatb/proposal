@@ -558,7 +558,7 @@ const scrollButtons = {
     } = chart;
 
     ctx.save();
-    
+
     const lasValue = data.labels.length - 1;
 
     // renderiza los botones
@@ -593,15 +593,15 @@ const scrollButtons = {
 
 // Note: changes to the plugin code is not reflected to the chart, because the plugin is loaded at chart construction time and editor changes only trigger an chart.update().
 const background_plugin = {
-  id: 'custom_canvas_background_color',
+  id: "custom_canvas_background_color",
   beforeDraw: (chart) => {
-    const {ctx} = chart;
+    const { ctx } = chart;
     ctx.save();
-    ctx.globalCompositeOperation = 'destination-over';
-    ctx.fillStyle = 'white';
+    ctx.globalCompositeOperation = "destination-over";
+    ctx.fillStyle = "white";
     ctx.fillRect(0, 0, chart.width, chart.height);
     ctx.restore();
-  }
+  },
 };
 
 // config
@@ -700,7 +700,8 @@ function posMaxMin(datos) {
       min = datos[i];
       posMin = i;
     }
-  } return [posMax, posMin];
+  }
+  return [posMax, posMin];
 }
 
 // Move view to the maximum value of the chart
@@ -749,12 +750,22 @@ document.getElementById("buscador2").addEventListener("keyup", (e) => {
     myChart.options.scales.x.min = pos - 5;
     myChart.options.scales.x.max = pos + 5;
     myChart.update();
-  }
-  else {
+  } else {
+    result = [];
     console.log("No hay coincidencias");
+    data.datasets[0].data.forEach((d) => {
+      result.push(Math.abs(d - buscador));
+    });
+    console.log(result);
+    Math.min(...result);
+    cercano = result.indexOf(Math.min(...result));
+    // move the view to cercano
+    myChart.options.scales.x.min = cercano - 5;
+    myChart.options.scales.x.max = cercano + 5;
+    myChart.update();
+    console.log("el valor mas cercano es: "+ data.datasets[0].data[cercano]);
   }
-}); 
-
+});
 
 // document.getElementById("buscador2").addEventListener("keyup", (e) => {
 //   let buscador = e.target.value;
@@ -772,8 +783,6 @@ document.getElementById("buscador2").addEventListener("keyup", (e) => {
 //     }
 //   }
 // });
-
-
 
 // Searcher on real time with regex and find for chart labels and move the view
 // document.getElementById("buscador").addEventListener("keyup", (e) => {
