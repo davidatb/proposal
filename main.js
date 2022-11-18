@@ -744,7 +744,6 @@ document.getElementById("buscador").addEventListener("keyup", (e) => {
 document.getElementById("buscador2").addEventListener("keyup", (e) => {
   let buscador = e.target.value;
   let coincidencias = data.datasets[0].data.filter((element) => element == buscador);
-  console.log(coincidencias);
   if (coincidencias.length > 0) {
     let pos = data.datasets[0].data.map((element) => element == buscador).indexOf(true);
     myChart.options.scales.x.min = pos - 5;
@@ -752,46 +751,45 @@ document.getElementById("buscador2").addEventListener("keyup", (e) => {
     myChart.update();
   } else {
     result = [];
-    console.log("No hay coincidencias");
     data.datasets[0].data.forEach((d) => {
       result.push(Math.abs(d - buscador));
     });
-    console.log(result);
     Math.min(...result);
     cercano = result.indexOf(Math.min(...result));
+
+    // show messagge in div if not found
+    document.getElementsByClassName("message")[0].innerHTML = `<div class=""><strong>Alerta!</strong> No se encontro el valor ${buscador} en el grafico pero el valor mas cercano es ${data.datasets[0].data[cercano]}.</div>`;
+
+    // Delete message after 5 seconds
+    setTimeout(() => {
+      document.getElementsByClassName("message")[0].innerHTML = "";
+    }, 5000);
+
     // move the view to cercano
     myChart.options.scales.x.min = cercano - 5;
     myChart.options.scales.x.max = cercano + 5;
     myChart.update();
-    console.log("el valor mas cercano es: "+ data.datasets[0].data[cercano]);
   }
 });
 
-// document.getElementById("buscador2").addEventListener("keyup", (e) => {
-//   let buscador = e.target.value;
-//   let pos = datos.map((element) => element.toString()).indexOf(buscador);
-//   if (pos > -1) {
-//     myChart.options.scales.x.min = pos - 5;
-//     myChart.options.scales.x.max = pos + 5;
-//     myChart.update();
-//   } else {
-//     let pos = datos.map((element) => element.toString()).findIndex((element) => element.includes(buscador));
-//     if (pos > -1) {
-//       myChart.options.scales.x.min = pos - 5;
-//       myChart.options.scales.x.max = pos + 5;
-//       myChart.update();
-//     }
-//   }
-// });
+// zoom out the chart to show more columns
+document.getElementById("zoomOut").addEventListener("click", (e) => {
+  myChart.options.scales.x.min = 0;
+  myChart.options.scales.x.max = 50;
+  myChart.update();
+});
 
-// Searcher on real time with regex and find for chart labels and move the view
-// document.getElementById("buscador").addEventListener("keyup", (e) => {
-//   let buscador = e.target.value;
-//   let regex = new RegExp(buscador, "i");
-//   let pos = data.labels.findIndex((element) => regex.test(element));
-//   if (pos > -1) {
-//     myChart.options.scales.x.min = pos - 5;
-//     myChart.options.scales.x.max = pos + 5;
-//     myChart.update();
-//   }
-// } );
+// zoom in the chart to show less columns
+document.getElementById("zoomIn").addEventListener("click", (e) => {
+  myChart.options.scales.x.min = 0;
+  myChart.options.scales.x.max = 10;
+  myChart.update();
+});
+
+
+
+
+// Destroy chart block when the window close
+window.addEventListener("beforeunload", (e) => {
+  myChart.destroy();
+});
