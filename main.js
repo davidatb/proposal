@@ -758,7 +758,9 @@ document.getElementById("buscador2").addEventListener("keyup", (e) => {
     cercano = result.indexOf(Math.min(...result));
 
     // show messagge in div if not found
-    document.getElementsByClassName("message")[0].innerHTML = `<div class=""><strong>Alerta!</strong> No se encontro el valor ${buscador} en el grafico pero el valor mas cercano es ${data.datasets[0].data[cercano]}.</div>`;
+    document.getElementsByClassName(
+      "message"
+    )[0].innerHTML = `<div class=""><strong>Alerta!</strong> No se encontro el valor ${buscador} en el grafico pero el valor mas cercano es ${data.datasets[0].data[cercano]}.</div>`;
 
     // Delete message after 5 seconds
     setTimeout(() => {
@@ -772,22 +774,21 @@ document.getElementById("buscador2").addEventListener("keyup", (e) => {
   }
 });
 
-// zoom out the chart to show more columns
-document.getElementById("zoomOut").addEventListener("click", (e) => {
+// generic function to zoom in and out
+
+function zoom(InOut) {
   myChart.options.scales.x.min = 0;
-  myChart.options.scales.x.max = 50;
+  myChart.options.scales.x.max = InOut;
   myChart.update();
+}
+
+document.getElementById("zoomIn").addEventListener("click", () => {
+  zoom(10);
 });
 
-// zoom in the chart to show less columns
-document.getElementById("zoomIn").addEventListener("click", (e) => {
-  myChart.options.scales.x.min = 0;
-  myChart.options.scales.x.max = 10;
-  myChart.update();
+document.getElementById("zoomOut").addEventListener("click", () => {
+  zoom(50);
 });
-
-
-
 
 // Destroy chart block when the window close
 window.addEventListener("beforeunload", (e) => {
