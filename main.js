@@ -606,7 +606,7 @@ const background_plugin = {
 
 // config
 const config = {
-  type: "bar",
+  type: "line",
   data,
   options: {
     // barThickness: 50,
@@ -794,3 +794,48 @@ document.getElementById("zoomOut").addEventListener("click", () => {
 window.addEventListener("beforeunload", (e) => {
   myChart.destroy();
 });
+
+// Dark mode chart with toggle
+
+// document.getElementById("toggle").addEventListener("click", () => {
+//   (document.body.classList.toggle("dark"), document.getElementById("toggle").classList.toggle("active"));
+//   myChart.options.plugins.legend.labels.color = document.body.classList.contains("dark") ? "white" : "black";
+//   myChart.options.plugins.legend.labels.fontColor = document.body.classList.contains("dark") ? "white" : "black";
+//   myChart.options.plugins.legend.labels.boxColor = document.body.classList.contains("dark") ? "white" : "black";
+//   myChart.options.plugins.legend.labels.borderColor = document.body.classList.contains("dark") ? "white" : "black";
+//   myChart.options.plugins.legend.labels.backgroundColor = document.body.classList.contains("dark") ? "white" : "black";
+//   myChart.options.plugins.legend.labels.fontColor = document.body.classList.contains("dark") ? "white" : "black";
+// });
+
+
+
+// If dark mode toggle is actve change chart colors
+// document.getElementById("toggle").addEventListener("click", () => {
+  // add class active to toggle
+  // document.getElementById("toggle").classList.toggle("active");
+  // if (document.getElementById("toggle").classList.contains("active")) {
+  //   myChart.options.plugins.legend.labels.color = "white";
+  //   myChart.options.plugins.legend.labels.fontColor = "white";
+  //   myChart.options.plugins.legend.labels.boxColor = "white";
+  //   myChart.options.plugins.legend.labels.borderColor = "white";
+  //   myChart.options.plugins.legend.labels.backgroundColor = "white";
+  //   myChart.options.plugins.legend.labels.fontColor = "white";
+  // } else {
+    // remove class active
+//     document.getElementById("toggle").classList.remove("active");
+//     myChart.options.plugins.legend.labels.color = "black";
+//     myChart.options.plugins.legend.labels.fontColor = "black";
+//     myChart.options.plugins.legend.labels.boxColor = "black";
+//     myChart.options.plugins.legend.labels.borderColor = "black";
+//     myChart.options.plugins.legend.labels.backgroundColor = "black";
+//     myChart.options.plugins.legend.labels.fontColor = "black";
+//   }
+//   myChart.update();
+// });
+
+
+
+
+
+
+  
