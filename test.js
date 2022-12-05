@@ -264,9 +264,9 @@ grafica["crear"] = (param) => {
 
   // Move view to the minimum value of the chart with param.id
   function MinValue(param) {
-    let pos = posMaxMin(obj.datos[param.id], param.id)[1];
-    obj.elementos[param.id].options.scales.x.min = pos - 1;
-    obj.elementos[param.id].options.scales.x.max = pos + 1;
+    let pos = posMaxMin(obj.datos[param.id])[1];
+    obj.elementos[param.id].options.scales.x.min = pos - 5;
+    obj.elementos[param.id].options.scales.x.max = pos + 5;
     obj.elementos[param.id].update();
   }
 
