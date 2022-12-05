@@ -795,6 +795,66 @@ window.addEventListener("beforeunload", (e) => {
   myChart.destroy();
 });
 
+
+// Select type of chart and change the chart config value
+document.getElementById("select").addEventListener("change", (e) => {
+  let select = e.target.value;
+  if (select == "line") {
+    myChart.config.type = "line";
+    myChart.update();
+  } else if (select == "bar") {
+    myChart.config.type = "bar";
+    myChart.update();
+  } else if (select == "bubble") {
+    myChart.config.type = "bubble";
+    myChart.update();
+  }
+});
+
+
+// Show or hide grid lines
+document.getElementById("showGrid").addEventListener("click", () => {
+  myChart.options.scales.x.grid.display = !myChart.options.scales.x.grid.display;
+  myChart.options.scales.y.grid.display = !myChart.options.scales.y.grid.display;
+  myChart.update();
+});
+
+
+
+
+// Change background canvas chart to black
+
+document.getElementById("toggle").addEventListener("click", () => {
+  (document.body.classList.toggle("dark"), document.getElementById("toggle").classList.toggle("active"));
+  myChart.options.plugins.legend.labels.color = document.body.classList.contains("dark") ? "white" : "black";
+  myChart.options.plugins.legend.labels.fontColor = document.body.classList.contains("dark") ? "white" : "black";
+  myChart.options.plugins.legend.labels.boxColor = document.body.classList.contains("dark") ? "white" : "black";
+  myChart.options.plugins.legend.labels.borderColor = document.body.classList.contains("dark") ? "white" : "black";
+  myChart.options.plugins.legend.labels.backgroundColor = document.body.classList.contains("dark") ? "white" : "black";
+  myChart.options.plugins.legend.labels.fontColor = document.body.classList.contains("dark") ? "white" : "black";
+myChart.update();
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Dark mode chart with toggle
 
 // document.getElementById("toggle").addEventListener("click", () => {
