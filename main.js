@@ -606,7 +606,7 @@ const background_plugin = {
 
 // config
 const config = {
-  type: "line",
+  type: "bar",
   data,
   options: {
     // barThickness: 50,
@@ -819,21 +819,121 @@ document.getElementById("showGrid").addEventListener("click", () => {
   myChart.update();
 });
 
-
-
-
-// Change background canvas chart to black
-
-document.getElementById("toggle").addEventListener("click", () => {
-  (document.body.classList.toggle("dark"), document.getElementById("toggle").classList.toggle("active"));
-  myChart.options.plugins.legend.labels.color = document.body.classList.contains("dark") ? "white" : "black";
-  myChart.options.plugins.legend.labels.fontColor = document.body.classList.contains("dark") ? "white" : "black";
-  myChart.options.plugins.legend.labels.boxColor = document.body.classList.contains("dark") ? "white" : "black";
-  myChart.options.plugins.legend.labels.borderColor = document.body.classList.contains("dark") ? "white" : "black";
-  myChart.options.plugins.legend.labels.backgroundColor = document.body.classList.contains("dark") ? "white" : "black";
-  myChart.options.plugins.legend.labels.fontColor = document.body.classList.contains("dark") ? "white" : "black";
-myChart.update();
+// Show top 5 values
+document.getElementById("Top5").addEventListener("click", () => {
+  let top5 = data.datasets[0].data.sort((a, b) => b - a).slice(0, 5);
+  let pos = [];
+  for (let i = 0; i < top5.length; i++) {
+    pos.push(data.datasets[0].data.indexOf(top5[i]));
+  }
+  myChart.data.labels = pos.map((element) => data.labels[element]);
+  console.log("La data original es",myChart.data.datasets[0].data)
+  myChart.data.datasets[0].data = top5;
+  console.log("El top 5 es", top5);
+  myChart.config.type = "pie";
+  myChart.update();
 });
+
+// Show bottom 5 values
+document.getElementById("Bottom5").addEventListener("click", () => {
+  let bottom5 = data.datasets[0].data.sort((a, b) => a - b).slice(0, 5);
+  let pos = [];
+  for (let i = 0; i < bottom5.length; i++) {
+    pos.push(data.datasets[0].data.indexOf(bottom5[i]));
+  }
+  myChart.data.labels = pos.map((element) => data.labels[element]);
+  myChart.data.datasets[0].data = bottom5;
+  console.log("El bottom 5 es", bottom5);
+  myChart.config.type = "pie";
+  myChart.update();
+});
+
+// Show all values
+document.getElementById("All").addEventListener("click", () => {
+  myChart.data.labels = labels;
+  myChart.data.datasets[0].data = datos;
+  console.log("La data original es", datos);
+  myChart.config.type = "bar";
+  myChart.update();
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Replace the chart data with top 5 values
+// document.getElementById("Top5").addEventListener("click", () => {
+//   let top5 = data.datasets[0].data.sort((a, b) => b - a).slice(0, 5);
+//   let pos = [];
+//   for (let i = 0; i < top5.length; i++) {
+//     pos.push(data.datasets[0].data.indexOf(top5[i]));
+//   }
+//   myChart.data.labels = pos.map((element) => data.labels[element]);
+//   myChart.data.datasets[0].data = top5;
+// //change the chart type to pie
+//   myChart.config.type = "pie";
+//   myChart.update();
+// });
+
+
+
+
+
+
+//Replace the chart data with bottom 5 values
+// document.getElementById("Bottom5").addEventListener("click", () => {
+//   let bottom5 = data.datasets[0].data.sort((a, b) => a - b).slice(0, 5);
+//   let pos = [];
+//   for (let i = 0; i < bottom5.length; i++) {
+//     pos.push(data.datasets[0].data.indexOf(bottom5[i]));
+//   }
+//   myChart.data.labels = pos.map((element) => data.labels[element]);
+//   myChart.data.datasets[0].data = bottom5;
+// //change the chart type to pie
+//   myChart.config.type = "pie";
+//   myChart.update();
+// });
+
+
+
+
+
+
+
+
 
 
 
