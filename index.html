@@ -19,23 +19,46 @@
     <div class="chartCard">
       <div class="chartBox">
         <canvas id="myChart"></canvas>
+        <!-- <canvas id="myChart_1"></canvas> -->
       </div>
       <div class="podium">
+        <div class="medidas_container">
+          <div class="medidas_title">
+            <h2>Medidas aritmeticas</h2>
+          </div>
+          <div class="medidas">
+            <p id="average"></p>
+            <p id="min_value"></p>
+            <p id="max_value"></p>
+          </div>
+        </div>
         <select name="select" id="select">
-          <option value="line">line</option>
+          <option selected disabled>Selecciona el tipo de grafica</option>
           <option value="bar">bar</option>
+          <option value="line">line</option>
           <option value="bubble">bubble</option>
         </select>
-        <button id="Top5">Only Top</button>
-        <button id="Bottom5">Only Bottom</button>
-        <button id="All">Original data</button>
-        <button id="showGrid">Grid</button>
-        <button onclick="download()">Descargar PNG</button>
-        <button onclick="download_jpg()">Descargar JPG</button>
-        <button onclick="MaxValue()">Valor maximo</button>
-        <button onclick="MinValue()">Valor minimo</button>
-        <button class="btn" id="zoomIn">+ Zoom In</button>
-        <button class="btn" id="zoomOut">- Zoom Out</button>
+        <div class="filter_container">
+          <div class="filter_box">
+            <input type="number" id="min" placeholder="" required="required" />
+            <span>Valor minimo</span>
+          </div>
+          <div class="filter_box">
+            <input type="number" id="max" placeholder="" required="required" />
+            <span>Valor maximo</span>
+          </div>
+          <button class="btn" id="filter">filter</button>
+        </div>
+        <button class="btn" id="Top5">Only Top</button>
+        <button class="btn" id="Bottom5">Only Bottom</button>
+        <button class="btn" id="All">Original data</button>
+        <button class="btn" id="showGrid">Grid</button>
+        <button class="btn" onclick="download()">Descargar PNG</button>
+        <button class="btn" onclick="download_jpg()">Descargar JPG</button>
+        <button class="btn" onclick="MaxValue()">Valor maximo</button>
+        <button class="btn" onclick="MinValue()">Valor minimo</button>
+        <button class="btn" class="btn" id="zoomIn">+ Zoom In</button>
+        <button class="btn" class="btn" id="zoomOut">- Zoom Out</button>
         <div id="toggle">
           <i class="indicator"></i>
         </div>
@@ -43,5 +66,6 @@
     </div>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="main.js"></script>
+    <script src="test.js"></script>
   </body>
 </html>

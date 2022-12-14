@@ -51,8 +51,11 @@ grafica["data"] = {
 
 grafica["crear"] = (param) => {
   const obj = this;
-  obj.elementos = {};
   obj.configuracion = {};
+  obj.render = (param) => {
+    obj.elementos[param.id] = new Chart(document.getElementById(param.idTag), obj.configuracion);
+  };
+  obj.elementos = {};
   obj.data = {};
 
   if (param.id == undefined) {
@@ -165,8 +168,6 @@ grafica["crear"] = (param) => {
     // config
     param.config[param.id].plugins.push(scrollButtons[param.id]);
     param.config[param.id].plugins.push(background_plugin[param.id]);
-
-    obj.elementos[param.id] = new Chart(document.getElementById(param.idTag), obj.configuracion);
 
     function scrollEffect(click) {
       const {
@@ -342,3 +343,17 @@ grafica["crear"] = (param) => {
     obj.elementos[param.id].destroy();
   });
 };
+
+grafica["render"] = (param) => {
+  // grafica["crear"].render(param);
+  console.log(grafica);
+};
+
+let param = {
+  id: "grafica1",
+  idTag: "myChart_1",
+};
+
+// grafica.render(param);
+  
+

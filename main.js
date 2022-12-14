@@ -774,6 +774,43 @@ document.getElementById("buscador2").addEventListener("keyup", (e) => {
   }
 });
 
+// Show the average value of the chart in a p tag with his label
+function average() {
+  let sum = 0;
+  for (let i = 0; i < datos.length; i++) {
+    sum += datos[i];
+  }
+  let average = sum / datos.length;
+  document.getElementById("average").
+    innerHTML = `El promedio de los valores es: ${average.toFixed(2)}`;
+}
+average();
+
+// Show the minimum value of the chart in a p tag with his label
+function min_value() {
+  let min = datos[0];
+  for (let i = 1; i < datos.length; i++) {
+    if (datos[i] < min) {
+      min = datos[i];
+    }
+  }
+  document.getElementById("min_value").innerHTML = `El valor minimo es: ${min}`;
+}
+min_value();
+
+// Show the maximum value of the chart in a p tag with his label
+function max_value() {
+  let max = datos[0];
+  for (let i = 1; i < datos.length; i++) {
+    if (datos[i] > max) {
+      max = datos[i];
+    }
+  }
+  document.getElementById("max_value").innerHTML = `El valor maximo es: ${max}`;
+}
+max_value();
+
+
 // generic function to zoom in and out
 
 function zoom(InOut) {
@@ -795,7 +832,6 @@ window.addEventListener("beforeunload", (e) => {
   myChart.destroy();
 });
 
-
 // Select type of chart and change the chart config value
 document.getElementById("select").addEventListener("change", (e) => {
   let select = e.target.value;
@@ -810,7 +846,6 @@ document.getElementById("select").addEventListener("change", (e) => {
     myChart.update();
   }
 });
-
 
 // Show or hide grid lines
 document.getElementById("showGrid").addEventListener("click", () => {
@@ -827,7 +862,7 @@ document.getElementById("Top5").addEventListener("click", () => {
     pos.push(data.datasets[0].data.indexOf(top5[i]));
   }
   myChart.data.labels = pos.map((element) => data.labels[element]);
-  console.log("La data original es",myChart.data.datasets[0].data)
+  console.log("La data original es", myChart.data.datasets[0].data);
   myChart.data.datasets[0].data = top5;
   console.log("El top 5 es", top5);
   myChart.config.type = "pie";
@@ -857,98 +892,34 @@ document.getElementById("All").addEventListener("click", () => {
   myChart.update();
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//Replace the chart data with top 5 values
-// document.getElementById("Top5").addEventListener("click", () => {
-//   let top5 = data.datasets[0].data.sort((a, b) => b - a).slice(0, 5);
-//   let pos = [];
-//   for (let i = 0; i < top5.length; i++) {
-//     pos.push(data.datasets[0].data.indexOf(top5[i]));
-//   }
-//   myChart.data.labels = pos.map((element) => data.labels[element]);
-//   myChart.data.datasets[0].data = top5;
-// //change the chart type to pie
-//   myChart.config.type = "pie";
-//   myChart.update();
-// });
-
-
-
-
-
-
-//Replace the chart data with bottom 5 values
-// document.getElementById("Bottom5").addEventListener("click", () => {
-//   let bottom5 = data.datasets[0].data.sort((a, b) => a - b).slice(0, 5);
-//   let pos = [];
-//   for (let i = 0; i < bottom5.length; i++) {
-//     pos.push(data.datasets[0].data.indexOf(bottom5[i]));
-//   }
-//   myChart.data.labels = pos.map((element) => data.labels[element]);
-//   myChart.data.datasets[0].data = bottom5;
-// //change the chart type to pie
-//   myChart.config.type = "pie";
-//   myChart.update();
-// });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// Filter with range of values
+document.getElementById("filter").addEventListener("click", () => {
+  let min = document.getElementById("min").value;
+  let max = document.getElementById("max").value;
+  let filter = data.datasets[0].data.filter((element) => element >= min && element <= max);
+  let pos = [];
+  for (let i = 0; i < filter.length; i++) {
+    pos.push(data.datasets[0].data.indexOf(filter[i]));
+  }
+  myChart.data.labels = pos.map((element) => data.labels[element]);
+  myChart.data.datasets[0].data = filter;
+  myChart.config.type = "bar";
+  myChart.update();
+});
+
+
+//When the canva tag size is less than 500px hide the labels
+window.addEventListener("resize", () => {
+  if (window.innerWidth < 500) {
+    myChart.options.scales.x.ticks.display = false;
+    myChart.options.scales.y.ticks.display = false;
+    myChart.update();
+  } else {
+    myChart.options.scales.x.ticks.display = true;
+    myChart.options.scales.y.ticks.display = true;
+    myChart.update();
+  }
+});
 
 
 
@@ -967,21 +938,19 @@ document.getElementById("All").addEventListener("click", () => {
 //   myChart.options.plugins.legend.labels.fontColor = document.body.classList.contains("dark") ? "white" : "black";
 // });
 
-
-
 // If dark mode toggle is actve change chart colors
 // document.getElementById("toggle").addEventListener("click", () => {
-  // add class active to toggle
-  // document.getElementById("toggle").classList.toggle("active");
-  // if (document.getElementById("toggle").classList.contains("active")) {
-  //   myChart.options.plugins.legend.labels.color = "white";
-  //   myChart.options.plugins.legend.labels.fontColor = "white";
-  //   myChart.options.plugins.legend.labels.boxColor = "white";
-  //   myChart.options.plugins.legend.labels.borderColor = "white";
-  //   myChart.options.plugins.legend.labels.backgroundColor = "white";
-  //   myChart.options.plugins.legend.labels.fontColor = "white";
-  // } else {
-    // remove class active
+// add class active to toggle
+// document.getElementById("toggle").classList.toggle("active");
+// if (document.getElementById("toggle").classList.contains("active")) {
+//   myChart.options.plugins.legend.labels.color = "white";
+//   myChart.options.plugins.legend.labels.fontColor = "white";
+//   myChart.options.plugins.legend.labels.boxColor = "white";
+//   myChart.options.plugins.legend.labels.borderColor = "white";
+//   myChart.options.plugins.legend.labels.backgroundColor = "white";
+//   myChart.options.plugins.legend.labels.fontColor = "white";
+// } else {
+// remove class active
 //     document.getElementById("toggle").classList.remove("active");
 //     myChart.options.plugins.legend.labels.color = "black";
 //     myChart.options.plugins.legend.labels.fontColor = "black";
@@ -992,10 +961,3 @@ document.getElementById("All").addEventListener("click", () => {
 //   }
 //   myChart.update();
 // });
-
-
-
-
-
-
-  
