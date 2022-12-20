@@ -486,6 +486,24 @@ const datos = [
   204, 204, 204, 34, 133, 318, 318, 74, 161, 35, 204, 204, 204, 204, 204, 35, 133, 1178, 577, 170, 41, 41, 161, 161, 204, 82,
 ];
 
+// Array of colors
+
+let bordercolors = [
+  "rgba(238, 66, 102, 1)",
+  "rgba(135, 246, 255, 1)",
+  "rgba(246, 247, 64, 1)",
+  "rgba(65, 234, 212, 1)",
+  "rgba(157, 141, 241, 1)",
+  "rgba(107, 5, 4, 1)",
+  "rgba(0, 0, 0, 1)",
+];
+
+// Use bordercolors array with alpha 0.2 with spread operator
+let bgcolors = [...bordercolors].map((color) => {
+  return color.replace("1)", "0.4)");
+});
+
+
 // setup
 const data = {
   labels: labels,
@@ -493,24 +511,8 @@ const data = {
     {
       label: "Resumen General",
       data: datos,
-      backgroundColor: [
-        "rgba(255, 26, 104, 0.2)",
-        "rgba(54, 162, 235, 0.2)",
-        "rgba(255, 206, 86, 0.2)",
-        "rgba(75, 192, 192, 0.2)",
-        "rgba(153, 102, 255, 0.2)",
-        "rgba(255, 159, 64, 0.2)",
-        "rgba(0, 0, 0, 0.2)",
-      ],
-      borderColor: [
-        "rgba(255, 26, 104, 1)",
-        "rgba(54, 162, 235, 1)",
-        "rgba(255, 206, 86, 1)",
-        "rgba(75, 192, 192, 1)",
-        "rgba(153, 102, 255, 1)",
-        "rgba(255, 159, 64, 1)",
-        "rgba(0, 0, 0, 1)",
-      ],
+      backgroundColor: bgcolors,
+      borderColor: bordercolors,
       borderWidth: 1,
     },
   ],
@@ -561,33 +563,37 @@ const scrollButtons = {
 
     const lasValue = data.labels.length - 1;
 
-    // renderiza los botones
-    const angle = Math.PI / 180;
-    const radius = 18;
-    const strokeButton = "#03045E";
+    function drawButtons() {
+      const angle = Math.PI / 180;
+      const radius = 18;
+      const strokeButton = "#03045E";
+    
+      function buttons(x, y, r, aS, aE, text) {
+        ctx.beginPath();
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = strokeButton;
+        ctx.fillStyle = "white";
+        ctx.arc(x, y, r, aS, aE, false);
+        ctx.closePath();
+        ctx.stroke();
+        ctx.fill();
+        ctx.font = "bold 20px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillStyle = strokeButton;
+        ctx.fillText(text, x, y);
+        ctx.restore();
+      }
+    
+      if (x.min > 0) {
+        buttons(left, top + height / 2, radius, 0, angle * 360, "<");
+      }
+      if (x.max < lasValue) {
+        buttons(right, top + height / 2, radius, 0, angle * 360, ">");
+      }
+    }
+  
+    drawButtons();
 
-    function buttons(x, y, r, aS, aE, text) {
-      ctx.beginPath();
-      ctx.lineWidth = 3;
-      ctx.strokeStyle = strokeButton;
-      ctx.fillStyle = "white";
-      ctx.arc(x, y, r, aS, aE, false);
-      ctx.closePath();
-      ctx.stroke();
-      ctx.fill();
-      ctx.font = "bold 20px sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillStyle = strokeButton;
-      ctx.fillText(text, x, y);
-      ctx.restore();
-    }
-
-    if (x.min > 0) {
-      buttons(left, top + height / 2, radius, 0, angle * 360, "-");
-    }
-    if (x.max < lasValue) {
-      buttons(right, top + height / 2, radius, 0, angle * 360, "+");
-    }
   },
 };
 
@@ -774,6 +780,16 @@ document.getElementById("buscador2").addEventListener("keyup", (e) => {
   }
 });
 
+// When label length is greater than 15 show only the first 15 characters and update mychart
+(function () {
+  for (let i = 0; i < labels.length; i++) {
+    if (labels[i].length > 15) {
+      labels[i] = labels[i].slice(0, 15);
+    }
+  }
+  myChart.update();
+})();
+
 // Show the average value of the chart in a p tag with his label
 function average() {
   let sum = 0;
@@ -781,8 +797,7 @@ function average() {
     sum += datos[i];
   }
   let average = sum / datos.length;
-  document.getElementById("average").
-    innerHTML = `El promedio de los valores es: ${average.toFixed(2)}`;
+  document.getElementById("average").innerHTML = `El promedio de los valores es: ${average.toFixed(2)}`;
 }
 average();
 
@@ -809,7 +824,6 @@ function max_value() {
   document.getElementById("max_value").innerHTML = `El valor maximo es: ${max}`;
 }
 max_value();
-
 
 // generic function to zoom in and out
 
@@ -907,7 +921,6 @@ document.getElementById("filter").addEventListener("click", () => {
   myChart.update();
 });
 
-
 //When the canva tag size is less than 500px hide the labels
 window.addEventListener("resize", () => {
   if (window.innerWidth < 500) {
@@ -921,6 +934,38 @@ window.addEventListener("resize", () => {
   }
 });
 
+//Add border rounded to chart columns with a function autoinvoked
+
+//Show div with class podium when the button controls is clicked
+document.getElementById("controls").addEventListener("click", (e) => {
+  e.preventDefault();
+  document.querySelector(".podium").classList.toggle("show");
+});
+
+//Change the content of placeholder with id buscador in media queries
+window.addEventListener("resize", () => {
+  if (window.innerWidth <= 320) {
+    document.getElementById("buscador").placeholder = "Nombre";
+    document.getElementById("buscador2").placeholder = "Valor";
+  } else if (window.innerWidth <= 720) {
+    document.getElementById("buscador").placeholder = "Buscar nombre";
+    document.getElementById("buscador2").placeholder = "Buscar valor";
+  } else {
+    document.getElementById("buscador").placeholder = "Buscar por nombre";
+    document.getElementById("buscador2").placeholder = "Buscar por valor";
+  }
+});
+
+//ZoomIn and zoomOut with mouse wheel in chart to show more or less columns and update the chart
+document.getElementById("myChart").addEventListener("wheel", (e) => {
+  if (e.deltaY > 0) {
+    myChart.options.scales.x.min -= 1;
+    myChart.update();
+  } else {
+    myChart.options.scales.x.min += 1;
+    myChart.update();
+  }
+});
 
 
 

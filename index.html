@@ -11,8 +11,9 @@
       <p>Proposal</p>
     </div>
     <form class="search">
-      <input placeholder="Buscar cliente" type="search" name="buscador" id="buscador" class="cssBuscador" />
-      <input placeholder="Buscar cantidad" type="search" name="buscador" id="buscador2" class="cssBuscador" />
+      <input placeholder="Buscar cliente" type="search" name="buscador" id="buscador" class="cssBuscador buscador" />
+      <input placeholder="Buscar cantidad" type="search" name="buscador" id="buscador2" class="cssBuscador buscador2" />
+      <button class="btn" id="controls">Controles</button>
     </form>
     <div class="controls"></div>
     <div class="message"></div>
@@ -22,6 +23,7 @@
         <!-- <canvas id="myChart_1"></canvas> -->
       </div>
       <div class="podium">
+        <h2 style="display: block; /* background: red; */ width: 100%; text-align: center">Controles</h2>
         <div class="medidas_container">
           <div class="medidas_title">
             <h2>Medidas aritmeticas</h2>
@@ -47,18 +49,21 @@
             <input type="number" id="max" placeholder="" required="required" />
             <span>Valor maximo</span>
           </div>
-          <button class="btn" id="filter">filter</button>
+          <button class="btn" id="filter">filtro</button>
         </div>
-        <button class="btn" id="Top5">Only Top</button>
-        <button class="btn" id="Bottom5">Only Bottom</button>
+        <button class="btn" id="Top5">Top 5</button>
+        <button class="btn" id="Bottom5">Bottom 5</button>
         <button class="btn" id="All">Original data</button>
         <button class="btn" id="showGrid">Grid</button>
         <button class="btn" onclick="download()">Descargar PNG</button>
         <button class="btn" onclick="download_jpg()">Descargar JPG</button>
         <button class="btn" onclick="MaxValue()">Valor maximo</button>
         <button class="btn" onclick="MinValue()">Valor minimo</button>
-        <button class="btn" class="btn" id="zoomIn">+ Zoom In</button>
-        <button class="btn" class="btn" id="zoomOut">- Zoom Out</button>
+        <div class="zoom_box" >
+          <button class="btn" class="btn" id="zoomIn">+ Zoom In</button>
+          <button class="btn" class="btn" id="zoomOut">- Zoom Out</button>
+          <p>O usa la rueda del raton</p>
+        </div>
         <div id="toggle">
           <i class="indicator"></i>
         </div>
