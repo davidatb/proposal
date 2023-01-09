@@ -488,7 +488,7 @@ const datos = [
 
 // Array of colors
 
-let bordercolors = [
+const borders = [
   "rgba(238, 66, 102, 1)",
   "rgba(135, 246, 255, 1)",
   "rgba(246, 247, 64, 1)",
@@ -498,11 +498,10 @@ let bordercolors = [
   "rgba(0, 0, 0, 1)",
 ];
 
-// Use bordercolors array with alpha 0.2 with spread operator
-let bgcolors = [...bordercolors].map((color) => {
-  return color.replace("1)", "0.4)");
+// Use borders array with alpha 0.4 using map function
+const backgroundColors = borders.map((color) => {
+  return `${color.replace("1)", "0.4)")}`;
 });
-
 
 // setup
 const data = {
@@ -511,8 +510,8 @@ const data = {
     {
       label: "Resumen General",
       data: datos,
-      backgroundColor: bgcolors,
-      borderColor: bordercolors,
+      backgroundColor: backgroundColors,
+      borderColor: borders,
       borderWidth: 1,
     },
   ],
@@ -522,13 +521,10 @@ const data = {
 const scrollButtons = {
   id: "scrollButtons",
   afterEvent(chart, args) {
-    const {
-      ctx,
-      canvas,
-      data,
-      chartArea: { top, bottom, left, right, height },
-      scales: { x },
-    } = chart;
+    const { ctx, canvas, data, chartArea, scales } = chart;
+    const { top, bottom, left, right, height } = chartArea;
+    const { x } = scales;
+
     const lasValue = data.labels.length - 1;
 
     // funcionalidad de hover sobre los botones
@@ -552,23 +548,20 @@ const scrollButtons = {
     });
   },
   afterDatasetsDraw(chart, args, pluginOptions) {
-    const {
-      ctx,
-      data,
-      chartArea: { top, bottom, left, right, height },
-      scales: { x },
-    } = chart;
+    const { ctx, canvas, data, chartArea, scales } = chart;
+    const { top, bottom, left, right, height } = chartArea;
+    const { x } = scales;
 
     ctx.save();
 
     const lasValue = data.labels.length - 1;
 
-    function drawButtons() {
+    const drawButtons = () => {
       const angle = Math.PI / 180;
       const radius = 18;
       const strokeButton = "#03045E";
-    
-      function buttons(x, y, r, aS, aE, text) {
+
+      const buttons = (x, y, r, aS, aE, text) => {
         ctx.beginPath();
         ctx.lineWidth = 3;
         ctx.strokeStyle = strokeButton;
@@ -583,7 +576,7 @@ const scrollButtons = {
         ctx.fillText(text, x, y);
         ctx.restore();
       }
-    
+
       if (x.min > 0) {
         buttons(left, top + height / 2, radius, 0, angle * 360, "<");
       }
@@ -591,9 +584,8 @@ const scrollButtons = {
         buttons(right, top + height / 2, radius, 0, angle * 360, ">");
       }
     }
-  
-    drawButtons();
 
+    drawButtons();
   },
 };
 
@@ -634,7 +626,7 @@ const config = {
 // render init block
 const myChart = new Chart(document.getElementById("myChart"), config);
 
-function scrollEffect(click) {
+const scrollEffect = (click) => {
   const {
     ctx,
     data,
@@ -649,8 +641,8 @@ function scrollEffect(click) {
 
   if (myChart.options.scales.x.min > 0) {
     if (xCoor >= left - 18 && xCoor <= left + 18 && yCoor >= top + height / 2 - 18 && yCoor <= top + height / 2 + 18) {
-      myChart.options.scales.x.min = myChart.options.scales.x.min - 1;
-      myChart.options.scales.x.max = myChart.options.scales.x.max - 1;
+      myChart.options.scales.x.max = myChart.options.scales.x.max - 5;
+      myChart.options.scales.x.min = myChart.options.scales.x.min - 5;
     } else {
       myChart.options.scales.x.min === 0;
     }
@@ -658,8 +650,8 @@ function scrollEffect(click) {
 
   if (myChart.options.scales.x.max < lasValue) {
     if (xCoor >= right - 18 && xCoor <= right + 18 && yCoor >= top + height / 2 - 18 && yCoor <= top + height / 2 + 18) {
-      myChart.options.scales.x.min = myChart.options.scales.x.min + 1;
-      myChart.options.scales.x.max = myChart.options.scales.x.max + 1;
+      myChart.options.scales.x.min = myChart.options.scales.x.min + 5;
+      myChart.options.scales.x.max = myChart.options.scales.x.max + 5;
     } else {
       myChart.options.scales.x.max === lasValue;
     }
@@ -677,14 +669,14 @@ window.addEventListener("resize", (e) => {
 });
 
 // Download canvas to image block
-function download() {
+const download = () => {
   var link = document.createElement("a");
   link.download = "resumen-general.png";
   link.href = myChart.toBase64Image();
   link.click();
 }
 
-function download_jpg() {
+const download_jpg = () => {
   var link = document.createElement("a");
   link.download = "resumen-general.jpg";
   link.href = myChart.toBase64Image();
@@ -692,7 +684,7 @@ function download_jpg() {
 }
 
 // Position of max and min values in array datos
-function posMaxMin(datos) {
+const posMaxMin= (datos) => {
   let max = datos[0];
   let min = datos[0];
   let posMax = 0;
@@ -711,7 +703,7 @@ function posMaxMin(datos) {
 }
 
 // Move view to the maximum value of the chart
-function MaxValue() {
+const MaxValue = () => {
   let pos = posMaxMin(datos);
   console.log(labels[pos[0]]);
   myChart.options.scales.x.min = pos[0] - 5;
@@ -720,7 +712,7 @@ function MaxValue() {
 }
 
 // Move view to the minimum value of the chart
-function MinValue() {
+const MinValue = () => {
   let pos = posMaxMin(datos);
   console.log(labels[pos[1]]);
   myChart.options.scales.x.min = pos[1] - 5;
@@ -766,7 +758,7 @@ document.getElementById("buscador2").addEventListener("keyup", (e) => {
     // show messagge in div if not found
     document.getElementsByClassName(
       "message"
-    )[0].innerHTML = `<div class=""><strong>Alerta!</strong> No se encontro el valor ${buscador} en el grafico pero el valor mas cercano es ${data.datasets[0].data[cercano]}.</div>`;
+    )[0].innerHTML = `<p class="prueba"><strong>Alerta!</strong> No se encontro el valor ${buscador} en el grafico pero el valor mas cercano es ${data.datasets[0].data[cercano]}.<span> |</span></p>`;
 
     // Delete message after 5 seconds
     setTimeout(() => {
@@ -781,7 +773,7 @@ document.getElementById("buscador2").addEventListener("keyup", (e) => {
 });
 
 // When label length is greater than 15 show only the first 15 characters and update mychart
-(function () {
+(() => {
   for (let i = 0; i < labels.length; i++) {
     if (labels[i].length > 15) {
       labels[i] = labels[i].slice(0, 15);
@@ -791,18 +783,18 @@ document.getElementById("buscador2").addEventListener("keyup", (e) => {
 })();
 
 // Show the average value of the chart in a p tag with his label
-function average() {
+const average = () => {
   let sum = 0;
   for (let i = 0; i < datos.length; i++) {
     sum += datos[i];
   }
   let average = sum / datos.length;
-  document.getElementById("average").innerHTML = `El promedio de los valores es: ${average.toFixed(2)}`;
+  document.getElementById("average").innerHTML = `El promedio de los valores es: ${average.toFixed(0)}`;
 }
 average();
 
 // Show the minimum value of the chart in a p tag with his label
-function min_value() {
+const min_value = () => {
   let min = datos[0];
   for (let i = 1; i < datos.length; i++) {
     if (datos[i] < min) {
@@ -814,7 +806,7 @@ function min_value() {
 min_value();
 
 // Show the maximum value of the chart in a p tag with his label
-function max_value() {
+const max_value = () => {
   let max = datos[0];
   for (let i = 1; i < datos.length; i++) {
     if (datos[i] > max) {
@@ -827,7 +819,7 @@ max_value();
 
 // generic function to zoom in and out
 
-function zoom(InOut) {
+const zoom = (InOut) => {
   myChart.options.scales.x.min = 0;
   myChart.options.scales.x.max = InOut;
   myChart.update();
@@ -870,6 +862,7 @@ document.getElementById("showGrid").addEventListener("click", () => {
 
 // Show top 5 values
 document.getElementById("Top5").addEventListener("click", () => {
+  All();
   let top5 = data.datasets[0].data.sort((a, b) => b - a).slice(0, 5);
   let pos = [];
   for (let i = 0; i < top5.length; i++) {
@@ -885,6 +878,7 @@ document.getElementById("Top5").addEventListener("click", () => {
 
 // Show bottom 5 values
 document.getElementById("Bottom5").addEventListener("click", () => {
+  All();
   let bottom5 = data.datasets[0].data.sort((a, b) => a - b).slice(0, 5);
   let pos = [];
   for (let i = 0; i < bottom5.length; i++) {
@@ -898,24 +892,28 @@ document.getElementById("Bottom5").addEventListener("click", () => {
 });
 
 // Show all values
-document.getElementById("All").addEventListener("click", () => {
+const All = () => {
   myChart.data.labels = labels;
   myChart.data.datasets[0].data = datos;
   console.log("La data original es", datos);
   myChart.config.type = "bar";
   myChart.update();
+}
+
+document.getElementById("All").addEventListener("click", () => {
+  All();
 });
 
-// Filter with range of values
+// Filter with range of values using array datos
 document.getElementById("filter").addEventListener("click", () => {
   let min = document.getElementById("min").value;
   let max = document.getElementById("max").value;
-  let filter = data.datasets[0].data.filter((element) => element >= min && element <= max);
+  let filter = datos.filter((element) => element >= min && element <= max);
   let pos = [];
   for (let i = 0; i < filter.length; i++) {
-    pos.push(data.datasets[0].data.indexOf(filter[i]));
+    pos.push(datos.indexOf(filter[i]));
   }
-  myChart.data.labels = pos.map((element) => data.labels[element]);
+  myChart.data.labels = pos.map((element) => labels[element]);
   myChart.data.datasets[0].data = filter;
   myChart.config.type = "bar";
   myChart.update();
@@ -967,9 +965,21 @@ document.getElementById("myChart").addEventListener("wheel", (e) => {
   }
 });
 
+// Radar chart with top 20 values
+document.getElementById("Top20").addEventListener("click", () => {
+  All();
+  let top20 = data.datasets[0].data.sort((a, b) => b - a).slice(0, 20);
+  let pos = [];
+  for (let i = 0; i < top20.length; i++) {
+    pos.push(data.datasets[0].data.indexOf(top20[i]));
+  }
+  myChart.data.labels = pos.map((element) => data.labels[element]);
+  myChart.data.datasets[0].data = top20;
+  myChart.config.type = "radar";
+  myChart.update();
+});
 
-
-
+// show tooltip when bar is clicked too and show the value of the bar
 
 // Dark mode chart with toggle
 

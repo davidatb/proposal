@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
     <title>Buttons scroll</title>
   </head>
   <body>
@@ -24,6 +25,22 @@
       </div>
       <div class="podium">
         <h2 style="display: block; /* background: red; */ width: 100%; text-align: center">Controles</h2>
+        <div class="button_container">
+          <button class="btn" id="Top5">Top 5</button>
+          <button class="btn" id="Top20">Radar</button>
+          <button class="btn" id="Bottom5">Bottom 5</button>
+          <button class="btn" id="All">Reset</button>
+          <button class="btn" id="showGrid">Grid</button>
+          <button class="btn" onclick="download()">Descargar PNG</button>
+          <button class="btn" onclick="download_jpg()">Descargar JPG</button>
+          <button class="btn" onclick="MaxValue()">Valor maximo</button>
+          <button class="btn" onclick="MinValue()">Valor minimo</button>
+          <div class="zoom_box">
+            <button class="btn" class="btn" id="zoomIn">+ Zoom In</button>
+            <button class="btn" class="btn" id="zoomOut">- Zoom Out</button>
+            <p>O usa la rueda del raton</p>
+          </div>
+        </div>
         <div class="medidas_container">
           <div class="medidas_title">
             <h2>Medidas aritmeticas</h2>
@@ -34,13 +51,19 @@
             <p id="max_value"></p>
           </div>
         </div>
-        <select name="select" id="select">
-          <option selected disabled>Selecciona el tipo de grafica</option>
-          <option value="bar">bar</option>
-          <option value="line">line</option>
-          <option value="bubble">bubble</option>
-        </select>
+        <div class="select_container">
+          <label for="select">Selecciona el tipo de grafica</label>
+          <select name="select" id="select" class="select">
+            <option value="bar">bar</option>
+            <option value="line">line</option>
+            <option value="bubble">bubble</option>
+          </select>
+          <div class="icon_container">
+            <i class="fa-solid fa-caret-down"></i>
+          </div>
+        </div>
         <div class="filter_container">
+          <h2>Filtro</h2>
           <div class="filter_box">
             <input type="number" id="min" placeholder="" required="required" />
             <span>Valor minimo</span>
@@ -51,19 +74,7 @@
           </div>
           <button class="btn" id="filter">filtro</button>
         </div>
-        <button class="btn" id="Top5">Top 5</button>
-        <button class="btn" id="Bottom5">Bottom 5</button>
-        <button class="btn" id="All">Original data</button>
-        <button class="btn" id="showGrid">Grid</button>
-        <button class="btn" onclick="download()">Descargar PNG</button>
-        <button class="btn" onclick="download_jpg()">Descargar JPG</button>
-        <button class="btn" onclick="MaxValue()">Valor maximo</button>
-        <button class="btn" onclick="MinValue()">Valor minimo</button>
-        <div class="zoom_box" >
-          <button class="btn" class="btn" id="zoomIn">+ Zoom In</button>
-          <button class="btn" class="btn" id="zoomOut">- Zoom Out</button>
-          <p>O usa la rueda del raton</p>
-        </div>
+        
         <div id="toggle">
           <i class="indicator"></i>
         </div>
