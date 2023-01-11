@@ -575,7 +575,7 @@ const scrollButtons = {
         ctx.fillStyle = strokeButton;
         ctx.fillText(text, x, y);
         ctx.restore();
-      }
+      };
 
       if (x.min > 0) {
         buttons(left, top + height / 2, radius, 0, angle * 360, "<");
@@ -583,7 +583,7 @@ const scrollButtons = {
       if (x.max < lasValue) {
         buttons(right, top + height / 2, radius, 0, angle * 360, ">");
       }
-    }
+    };
 
     drawButtons();
   },
@@ -658,7 +658,7 @@ const scrollEffect = (click) => {
   }
 
   myChart.update();
-}
+};
 
 myChart.canvas.addEventListener("click", (e) => {
   scrollEffect(e);
@@ -674,17 +674,17 @@ const download = () => {
   link.download = "resumen-general.png";
   link.href = myChart.toBase64Image();
   link.click();
-}
+};
 
 const download_jpg = () => {
   var link = document.createElement("a");
   link.download = "resumen-general.jpg";
   link.href = myChart.toBase64Image();
   link.click();
-}
+};
 
 // Position of max and min values in array datos
-const posMaxMin= (datos) => {
+const posMaxMin = (datos) => {
   let max = datos[0];
   let min = datos[0];
   let posMax = 0;
@@ -700,7 +700,7 @@ const posMaxMin= (datos) => {
     }
   }
   return [posMax, posMin];
-}
+};
 
 // Move view to the maximum value of the chart
 const MaxValue = () => {
@@ -709,7 +709,7 @@ const MaxValue = () => {
   myChart.options.scales.x.min = pos[0] - 5;
   myChart.options.scales.x.max = pos[0] + 5;
   myChart.update();
-}
+};
 
 // Move view to the minimum value of the chart
 const MinValue = () => {
@@ -718,7 +718,7 @@ const MinValue = () => {
   myChart.options.scales.x.min = pos[1] - 5;
   myChart.options.scales.x.max = pos[1] + 5;
   myChart.update();
-}
+};
 
 // Searcher on real time for a chart label and move the view to closest instant search
 document.getElementById("buscador").addEventListener("keyup", (e) => {
@@ -790,7 +790,7 @@ const average = () => {
   }
   let average = sum / datos.length;
   document.getElementById("average").innerHTML = `El promedio de los valores es: ${average.toFixed(0)}`;
-}
+};
 average();
 
 // Show the minimum value of the chart in a p tag with his label
@@ -802,7 +802,7 @@ const min_value = () => {
     }
   }
   document.getElementById("min_value").innerHTML = `El valor minimo es: ${min}`;
-}
+};
 min_value();
 
 // Show the maximum value of the chart in a p tag with his label
@@ -814,7 +814,7 @@ const max_value = () => {
     }
   }
   document.getElementById("max_value").innerHTML = `El valor maximo es: ${max}`;
-}
+};
 max_value();
 
 // generic function to zoom in and out
@@ -823,7 +823,7 @@ const zoom = (InOut) => {
   myChart.options.scales.x.min = 0;
   myChart.options.scales.x.max = InOut;
   myChart.update();
-}
+};
 
 document.getElementById("zoomIn").addEventListener("click", () => {
   zoom(10);
@@ -898,7 +898,7 @@ const All = () => {
   console.log("La data original es", datos);
   myChart.config.type = "bar";
   myChart.update();
-}
+};
 
 document.getElementById("All").addEventListener("click", () => {
   All();
