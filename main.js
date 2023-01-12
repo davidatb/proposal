@@ -486,9 +486,11 @@ const datos = [
   204, 204, 204, 34, 133, 318, 318, 74, 161, 35, 204, 204, 204, 204, 204, 35, 133, 1178, 577, 170, 41, 41, 161, 161, 204, 82,
 ];
 
+const ALPHA = 0.2;
+
 // Array of colors
 
-const borders = [
+const borderColors = [
   "rgba(238, 66, 102, 1)",
   "rgba(135, 246, 255, 1)",
   "rgba(246, 247, 64, 1)",
@@ -498,9 +500,9 @@ const borders = [
   "rgba(0, 0, 0, 1)",
 ];
 
-// Use borders array with alpha 0.4 using map function
-const backgroundColors = borders.map((color) => {
-  return `${color.replace("1)", "0.4)")}`;
+// Use borderColors array with alpha 0.4 using map function
+const backgroundColors = borderColors.map((color) => {
+  return `${color.replace("1)", `${ALPHA})`)}`;
 });
 
 // setup
@@ -511,7 +513,7 @@ const data = {
       label: "Resumen General",
       data: datos,
       backgroundColor: backgroundColors,
-      borderColor: borders,
+      borderColor: borderColors,
       borderWidth: 1,
     },
   ],
@@ -590,7 +592,7 @@ const scrollButtons = {
 };
 
 // Note: changes to the plugin code is not reflected to the chart, because the plugin is loaded at chart construction time and editor changes only trigger an chart.update().
-const background_plugin = {
+const backgroundColor_plugin = {
   id: "custom_canvas_background_color",
   beforeDraw: (chart) => {
     const { ctx } = chart;
@@ -620,11 +622,22 @@ const config = {
       },
     },
   },
-  plugins: [scrollButtons, background_plugin],
+  plugins: [scrollButtons, backgroundColor_plugin],
 };
 
 // render init block
-const myChart = new Chart(document.getElementById("myChart"), config);
+let myChart = new Chart(document.getElementById("myChart"), config);
+
+// // Creation of the chart in a function
+const createChart = () => {
+  myChart.destroy();
+  //create again the same chart
+  myChart = new Chart(document.getElementById("myChart"), config);
+  //clean the canvas
+  // ctx.clearRect(0, 0, canvas.width, canvas.height);
+  //render again the chart
+  myChart.render();
+};
 
 const scrollEffect = (click) => {
   const {
@@ -908,6 +921,17 @@ document.getElementById("All").addEventListener("click", () => {
 document.getElementById("filter").addEventListener("click", () => {
   let min = document.getElementById("min").value;
   let max = document.getElementById("max").value;
+
+  // If min value is greater than max value swap values and show a div with position absolute and a message
+  if (min > max) {
+    let aux = min;
+    min = max;
+    max = aux;
+    alert("El valor minimo no deberia ser mayor al valor maximo");
+  }
+
+
+
   let filter = datos.filter((element) => element >= min && element <= max);
   let pos = [];
   for (let i = 0; i < filter.length; i++) {
@@ -978,41 +1002,3 @@ document.getElementById("Top20").addEventListener("click", () => {
   myChart.config.type = "radar";
   myChart.update();
 });
-
-// show tooltip when bar is clicked too and show the value of the bar
-
-// Dark mode chart with toggle
-
-// document.getElementById("toggle").addEventListener("click", () => {
-//   (document.body.classList.toggle("dark"), document.getElementById("toggle").classList.toggle("active"));
-//   myChart.options.plugins.legend.labels.color = document.body.classList.contains("dark") ? "white" : "black";
-//   myChart.options.plugins.legend.labels.fontColor = document.body.classList.contains("dark") ? "white" : "black";
-//   myChart.options.plugins.legend.labels.boxColor = document.body.classList.contains("dark") ? "white" : "black";
-//   myChart.options.plugins.legend.labels.borderColor = document.body.classList.contains("dark") ? "white" : "black";
-//   myChart.options.plugins.legend.labels.backgroundColor = document.body.classList.contains("dark") ? "white" : "black";
-//   myChart.options.plugins.legend.labels.fontColor = document.body.classList.contains("dark") ? "white" : "black";
-// });
-
-// If dark mode toggle is actve change chart colors
-// document.getElementById("toggle").addEventListener("click", () => {
-// add class active to toggle
-// document.getElementById("toggle").classList.toggle("active");
-// if (document.getElementById("toggle").classList.contains("active")) {
-//   myChart.options.plugins.legend.labels.color = "white";
-//   myChart.options.plugins.legend.labels.fontColor = "white";
-//   myChart.options.plugins.legend.labels.boxColor = "white";
-//   myChart.options.plugins.legend.labels.borderColor = "white";
-//   myChart.options.plugins.legend.labels.backgroundColor = "white";
-//   myChart.options.plugins.legend.labels.fontColor = "white";
-// } else {
-// remove class active
-//     document.getElementById("toggle").classList.remove("active");
-//     myChart.options.plugins.legend.labels.color = "black";
-//     myChart.options.plugins.legend.labels.fontColor = "black";
-//     myChart.options.plugins.legend.labels.boxColor = "black";
-//     myChart.options.plugins.legend.labels.borderColor = "black";
-//     myChart.options.plugins.legend.labels.backgroundColor = "black";
-//     myChart.options.plugins.legend.labels.fontColor = "black";
-//   }
-//   myChart.update();
-// });
