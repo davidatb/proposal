@@ -544,6 +544,7 @@ const scrollButtons = {
         x.max < lasValue
       ) {
         canvas.style.cursor = "pointer";
+
       } else {
         canvas.style.cursor = "default";
       }
@@ -578,7 +579,6 @@ const scrollButtons = {
         ctx.fillText(text, x, y);
         ctx.restore();
       };
-
       if (x.min > 0) {
         buttons(left, top + height / 2, radius, 0, angle * 360, "<");
       }
@@ -605,7 +605,7 @@ const backgroundColor_plugin = {
 };
 
 // config
-const config = {
+let config = {
   type: "bar",
   data,
   options: {
@@ -629,15 +629,15 @@ const config = {
 let myChart = new Chart(document.getElementById("myChart"), config);
 
 // // Creation of the chart in a function
-const createChart = () => {
-  myChart.destroy();
-  //create again the same chart
-  myChart = new Chart(document.getElementById("myChart"), config);
-  //clean the canvas
-  // ctx.clearRect(0, 0, canvas.width, canvas.height);
-  //render again the chart
-  myChart.render();
-};
+// const createChart = () => {
+//   myChart.destroy();
+//   //create again the same chart
+//   myChart = new Chart(document.getElementById("myChart"), config);
+//   //clean the canvas
+//   // ctx.clearRect(0, 0, canvas.width, canvas.height);
+//   //render again the chart
+//   myChart.render();
+// };
 
 const scrollEffect = (click) => {
   const {
@@ -906,11 +906,67 @@ document.getElementById("Bottom5").addEventListener("click", () => {
 
 // Show all values
 const All = () => {
-  myChart.data.labels = labels;
-  myChart.data.datasets[0].data = datos;
-  console.log("La data original es", datos);
-  myChart.config.type = "bar";
-  myChart.update();
+  // // Update object label chart updateConfigByMutating
+  // const updateConfigByMutating = (config) => {
+  //   //update datasets[0].data] label chart
+  //   config.type = "bar";
+  //   config.data.datasets[0].data = datos;
+  //   config.data.labels = labels;
+  //   //label
+  //   config.data.datasets[0].label = "Datos";
+  //   config.data.datasets[0].labels = "hola";
+  //   //canvas
+  //   console.log(config);
+  //   config.data;
+  // };
+  // updateConfigByMutating(config);
+  // myChart.data.labels = labels;
+  // myChart.data.datasets[0].data = datos;
+  // console.log("La data original es", datos);
+  // myChart.update();
+
+  // console.log(config);
+
+
+  function updateConfigAsNewObject(chart) {
+    //update type with value of select
+    chart.config.type = "bar";
+
+    //update datasets[0].data] label chart
+    chart.config.type = "bar";
+
+
+    chart.config.data.datasets[0].data = datos;
+    console.log("data antes de " + chart.config.data.datasets[0].data);
+    chart.config.data.labels = labels;
+    console.log(config.data.labels);
+    // chart.config.data.labels = labels;
+    // Use colors from the original chart
+    chart.config.data.datasets[0].backgroundColor = chart.data.datasets[0].backgroundColor;
+    chart.config.data.datasets[0].borderColor = chart.data.datasets[0].borderColor;
+    chart.options = {
+        responsive: true,
+        plugins: {
+            title: {
+                display: true,
+                text: 'Chart.js'
+            }
+        },
+        scales: {
+            x: {
+                display: true
+            },
+            y: {
+                display: true
+            }
+        }
+    };
+    chart.update();
+}
+updateConfigAsNewObject(myChart);
+
+
+
 };
 
 document.getElementById("All").addEventListener("click", () => {
@@ -929,8 +985,6 @@ document.getElementById("filter").addEventListener("click", () => {
     max = aux;
     alert("El valor minimo no deberia ser mayor al valor maximo");
   }
-
-
 
   let filter = datos.filter((element) => element >= min && element <= max);
   let pos = [];
@@ -962,6 +1016,18 @@ window.addEventListener("resize", () => {
 document.getElementById("controls").addEventListener("click", (e) => {
   e.preventDefault();
   document.querySelector(".podium").classList.toggle("show");
+  // after click any button inside the div podium hide the div with class podium
+  document.querySelectorAll(".podium button").forEach((element) => {
+    element.addEventListener("click", () => {
+      document.querySelector(".podium").classList.remove("show");
+    });
+  });
+  // when click is outside the div podium hide the div with class podium except when click is in the button controls in that case show the div with class podium
+  document.addEventListener("click", (e) => {
+    if (e.target != document.querySelector(".podium") && e.target != document.getElementById("controls")) {
+      document.querySelector(".podium").classList.remove("show");
+    }
+  });
 });
 
 //Change the content of placeholder with id buscador in media queries
@@ -989,15 +1055,14 @@ document.getElementById("myChart").addEventListener("wheel", (e) => {
   }
 });
 
-// Radar chart with top 20 values
+// Radar chart with top 20 values with spread operator
 document.getElementById("Top20").addEventListener("click", () => {
-  All();
-  let top20 = data.datasets[0].data.sort((a, b) => b - a).slice(0, 20);
+  let top20 = [...datos].sort((a, b) => b - a).slice(0, 20);
   let pos = [];
   for (let i = 0; i < top20.length; i++) {
-    pos.push(data.datasets[0].data.indexOf(top20[i]));
+    pos.push(datos.indexOf(top20[i]));
   }
-  myChart.data.labels = pos.map((element) => data.labels[element]);
+  myChart.data.labels = pos.map((element) => labels[element]);
   myChart.data.datasets[0].data = top20;
   myChart.config.type = "radar";
   myChart.update();
