@@ -10,15 +10,15 @@
     <script type="module" src="main.js"></script>
     <script src="test.js"></script>
   </head>
-  <body>
+  <body onload="setEvents()">
     <div class="chartMenu">
       <p>Proposal</p>
     </div>
-    <form class="search">
+    <div class="search">
       <input placeholder="Buscar cliente" type="search" name="buscador" id="buscador" class="cssBuscador buscador" />
       <input placeholder="Buscar cantidad" type="search" name="buscador" id="buscador2" class="cssBuscador buscador2" />
-      <button class="btn" id="controls">Controles</button>
-    </form>
+      <button class="btn" onclick="setEvents()" id="controls">Controles</button>
+    </div>
     <div class="controls"></div>
     <div class="message"></div>
     <div class="chartCard">
@@ -77,7 +77,7 @@
           </div>
           <button class="btn" id="filter">filtro</button>
         </div>
-        
+
         <div id="toggle">
           <i class="indicator"></i>
         </div>

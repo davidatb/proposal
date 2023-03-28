@@ -1,4 +1,3 @@
-
 // arreglo de labels
 const labels = [
   "AROARRENDADORA",
@@ -487,147 +486,190 @@ const datos = [
   204, 204, 204, 34, 133, 318, 318, 74, 161, 35, 204, 204, 204, 204, 204, 35, 133, 1178, 577, 170, 41, 41, 161, 161, 204, 82,
 ];
 
-const ALPHA = 0.2;
+function createChart(datos1 = []) {
+  // When label length is greater than 15 show only the first 15 characters and update mychart
 
-// Array of colors
+  for (let i = 0; i < labels.length; i++) {
+    if (labels[i].length > 15) {
+      labels[i] = labels[i].slice(0, 15);
+    }
+  }
+  const ALPHA = 0.2;
 
-const borderColors = [
-  "rgba(238, 66, 102, 1)",
-  "rgba(135, 246, 255, 1)",
-  "rgba(246, 247, 64, 1)",
-  "rgba(65, 234, 212, 1)",
-  "rgba(157, 141, 241, 1)",
-  "rgba(107, 5, 4, 1)",
-  "rgba(0, 0, 0, 1)",
-];
+  // Array of colors
 
-// Use borderColors array with alpha 0.4 using map function
-const backgroundColors = borderColors.map((color) => {
-  return `${color.replace("1)", `${ALPHA})`)}`;
-});
+  const borderColors = [
+    "rgba(238, 66, 102, 1)",
+    "rgba(135, 246, 255, 1)",
+    "rgba(246, 247, 64, 1)",
+    "rgba(65, 234, 212, 1)",
+    "rgba(157, 141, 241, 1)",
+    "rgba(107, 5, 4, 1)",
+    "rgba(0, 0, 0, 1)",
+  ];
 
-// setup
-const data = {
-  labels: labels,
-  datasets: [
-    {
-      label: "Resumen General",
-      data: datos,
-      backgroundColor: backgroundColors,
-      borderColor: borderColors,
-      borderWidth: 1,
+  // Use borderColors array with alpha 0.4 using map function
+  const backgroundColors = borderColors.map((color) => {
+    return `${color.replace("1)", `${ALPHA})`)}`;
+  });
+
+  // setup
+  const data = {
+    labels: labels,
+    datasets: [
+      {
+        label: "Resumen General",
+        data: datos1,
+        backgroundColor: backgroundColors,
+        borderColor: borderColors,
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  // scrollButtons plugin block
+  const scrollButtons = {
+    id: "scrollButtons",
+    afterEvent(chart, args) {
+      const { ctx, canvas, data, chartArea, scales } = chart;
+      const { top, bottom, left, right, height } = chartArea;
+      const { x } = scales;
+
+      const lasValue = data.labels.length - 1;
+
+      // funcionalidad de hover sobre los botones
+      canvas.addEventListener("mousemove", (event) => {
+        const xCoor = args.event.x;
+        const yCoor = args.event.y;
+
+        if (xCoor >= left - 18 && xCoor <= left + 18 && yCoor >= top + height / 2 - 18 && yCoor <= top + height / 2 + 18 && x.min > 0) {
+          canvas.style.cursor = "pointer";
+        } else if (
+          xCoor >= right - 18 &&
+          xCoor <= right + 18 &&
+          yCoor >= top + height / 2 - 18 &&
+          yCoor <= top + height / 2 + 18 &&
+          x.max < lasValue
+        ) {
+          canvas.style.cursor = "pointer";
+        } else {
+          canvas.style.cursor = "default";
+        }
+      });
     },
-  ],
-};
+    afterDatasetsDraw(chart, args, pluginOptions) {
+      const { ctx, canvas, data, chartArea, scales } = chart;
+      const { top, bottom, left, right, height } = chartArea;
+      const { x } = scales;
 
-// scrollButtons plugin block
-const scrollButtons = {
-  id: "scrollButtons",
-  afterEvent(chart, args) {
-    const { ctx, canvas, data, chartArea, scales } = chart;
-    const { top, bottom, left, right, height } = chartArea;
-    const { x } = scales;
+      ctx.save();
 
-    const lasValue = data.labels.length - 1;
+      const lasValue = data.labels.length - 1;
 
-    // funcionalidad de hover sobre los botones
-    canvas.addEventListener("mousemove", (event) => {
-      const xCoor = args.event.x;
-      const yCoor = args.event.y;
+      const drawButtons = () => {
+        const angle = Math.PI / 180;
+        const radius = 18;
+        const strokeButton = "#03045E";
 
-      if (xCoor >= left - 18 && xCoor <= left + 18 && yCoor >= top + height / 2 - 18 && yCoor <= top + height / 2 + 18 && x.min > 0) {
-        canvas.style.cursor = "pointer";
-      } else if (
-        xCoor >= right - 18 &&
-        xCoor <= right + 18 &&
-        yCoor >= top + height / 2 - 18 &&
-        yCoor <= top + height / 2 + 18 &&
-        x.max < lasValue
-      ) {
-        canvas.style.cursor = "pointer";
-
-      } else {
-        canvas.style.cursor = "default";
-      }
-    });
-  },
-  afterDatasetsDraw(chart, args, pluginOptions) {
-    const { ctx, canvas, data, chartArea, scales } = chart;
-    const { top, bottom, left, right, height } = chartArea;
-    const { x } = scales;
-
-    ctx.save();
-
-    const lasValue = data.labels.length - 1;
-
-    const drawButtons = () => {
-      const angle = Math.PI / 180;
-      const radius = 18;
-      const strokeButton = "#03045E";
-
-      const buttons = (x, y, r, aS, aE, text) => {
-        ctx.beginPath();
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = strokeButton;
-        ctx.fillStyle = "white";
-        ctx.arc(x, y, r, aS, aE, false);
-        ctx.closePath();
-        ctx.stroke();
-        ctx.fill();
-        ctx.font = "bold 20px sans-serif";
-        ctx.textAlign = "center";
-        ctx.fillStyle = strokeButton;
-        ctx.fillText(text, x, y);
-        ctx.restore();
+        const buttons = (x, y, r, aS, aE, text) => {
+          ctx.beginPath();
+          ctx.lineWidth = 3;
+          ctx.strokeStyle = strokeButton;
+          ctx.fillStyle = "white";
+          ctx.arc(x, y, r, aS, aE, false);
+          ctx.closePath();
+          ctx.stroke();
+          ctx.fill();
+          ctx.font = "bold 20px sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillStyle = strokeButton;
+          ctx.fillText(text, x, y);
+          ctx.restore();
+        };
+        if (x.min > 0) {
+          buttons(left, top + height / 2, radius, 0, angle * 360, "<");
+        }
+        if (x.max < lasValue) {
+          buttons(right, top + height / 2, radius, 0, angle * 360, ">");
+        }
       };
-      if (x.min > 0) {
-        buttons(left, top + height / 2, radius, 0, angle * 360, "<");
-      }
-      if (x.max < lasValue) {
-        buttons(right, top + height / 2, radius, 0, angle * 360, ">");
-      }
-    };
 
-    drawButtons();
-  },
-};
+      drawButtons();
+    },
+  };
 
-// Note: changes to the plugin code is not reflected to the chart, because the plugin is loaded at chart construction time and editor changes only trigger an chart.update().
-const backgroundColor_plugin = {
-  id: "custom_canvas_background_color",
-  beforeDraw: (chart) => {
-    const { ctx } = chart;
-    ctx.save();
-    ctx.globalCompositeOperation = "destination-over";
-    ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, chart.width, chart.height);
-    ctx.restore();
-  },
-};
+  // Note: changes to the plugin code is not reflected to the chart, because the plugin is loaded at chart construction time and editor changes only trigger an chart.update().
+  const backgroundColor_plugin = {
+    id: "custom_canvas_background_color",
+    beforeDraw: (chart) => {
+      const { ctx } = chart;
+      ctx.save();
+      ctx.globalCompositeOperation = "destination-over";
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, chart.width, chart.height);
+      ctx.restore();
+    },
+  };
 
-// config
-let config = {
-  type: "bar",
-  data,
-  options: {
-    // barThickness: 50,
-    layout: {
-      padding: {
-        right: 20,
+  // config
+  let config = {
+    type: "bar",
+    data,
+    options: {
+      // barThickness: 50,
+      layout: {
+        padding: {
+          right: 20,
+        },
+      },
+      scales: {
+        x: { min: 80, max: 90 },
+        y: {
+          beginAtZero: true,
+        },
       },
     },
-    scales: {
-      x: { min: 80, max: 90 },
-      y: {
-        beginAtZero: true,
-      },
-    },
-  },
-  plugins: [scrollButtons, backgroundColor_plugin],
-};
+    plugins: [scrollButtons, backgroundColor_plugin],
+  };
 
-// render init block
-let myChart = new Chart(document.getElementById("myChart"), config);
+  // render init block
+  let myChart = new Chart(document.getElementById("myChart"), config);
+
+  const scrollEffect = (click) => {
+    const {
+      ctx,
+      data,
+      canvas,
+      chartArea: { top, bottom, left, right, height },
+      scales: { x },
+    } = myChart;
+
+    const xCoor = click.offsetX;
+    const yCoor = click.offsetY;
+    const lasValue = data.labels.length - 1;
+
+    if (myChart.options.scales.x.min > 0) {
+      if (xCoor >= left - 18 && xCoor <= left + 18 && yCoor >= top + height / 2 - 18 && yCoor <= top + height / 2 + 18) {
+        myChart.options.scales.x.max = myChart.options.scales.x.max - 5;
+        myChart.options.scales.x.min = myChart.options.scales.x.min - 5;
+      } else {
+        myChart.options.scales.x.min === 0;
+      }
+    }
+
+    if (myChart.options.scales.x.max < lasValue) {
+      if (xCoor >= right - 18 && xCoor <= right + 18 && yCoor >= top + height / 2 - 18 && yCoor <= top + height / 2 + 18) {
+        myChart.options.scales.x.min = myChart.options.scales.x.min + 5;
+        myChart.options.scales.x.max = myChart.options.scales.x.max + 5;
+      } else {
+        myChart.options.scales.x.max === lasValue;
+      }
+    }
+
+    myChart.update();
+  };
+}
+createChart(datos);
 
 // // Creation of the chart in a function
 // const createChart = () => {
@@ -639,40 +681,6 @@ let myChart = new Chart(document.getElementById("myChart"), config);
 //   //render again the chart
 //   myChart.render();
 // };
-
-const scrollEffect = (click) => {
-  const {
-    ctx,
-    data,
-    canvas,
-    chartArea: { top, bottom, left, right, height },
-    scales: { x },
-  } = myChart;
-
-  const xCoor = click.offsetX;
-  const yCoor = click.offsetY;
-  const lasValue = data.labels.length - 1;
-
-  if (myChart.options.scales.x.min > 0) {
-    if (xCoor >= left - 18 && xCoor <= left + 18 && yCoor >= top + height / 2 - 18 && yCoor <= top + height / 2 + 18) {
-      myChart.options.scales.x.max = myChart.options.scales.x.max - 5;
-      myChart.options.scales.x.min = myChart.options.scales.x.min - 5;
-    } else {
-      myChart.options.scales.x.min === 0;
-    }
-  }
-
-  if (myChart.options.scales.x.max < lasValue) {
-    if (xCoor >= right - 18 && xCoor <= right + 18 && yCoor >= top + height / 2 - 18 && yCoor <= top + height / 2 + 18) {
-      myChart.options.scales.x.min = myChart.options.scales.x.min + 5;
-      myChart.options.scales.x.max = myChart.options.scales.x.max + 5;
-    } else {
-      myChart.options.scales.x.max === lasValue;
-    }
-  }
-
-  myChart.update();
-};
 
 myChart.canvas.addEventListener("click", (e) => {
   scrollEffect(e);
@@ -785,16 +793,6 @@ document.getElementById("buscador2").addEventListener("keyup", (e) => {
     myChart.update();
   }
 });
-
-// When label length is greater than 15 show only the first 15 characters and update mychart
-(() => {
-  for (let i = 0; i < labels.length; i++) {
-    if (labels[i].length > 15) {
-      labels[i] = labels[i].slice(0, 15);
-    }
-  }
-  myChart.update();
-})();
 
 // Show the average value of the chart in a p tag with his label
 const average = () => {
@@ -928,14 +926,9 @@ const All = () => {
 
   // console.log(config);
 
-
   function updateConfigAsNewObject(chart) {
     //update type with value of select
     chart.config.type = "bar";
-
-    //update datasets[0].data] label chart
-    chart.config.type = "bar";
-
 
     chart.config.data.datasets[0].data = datos;
     console.log("data antes de " + chart.config.data.datasets[0].data);
@@ -945,126 +938,126 @@ const All = () => {
     // Use colors from the original chart
     chart.config.data.datasets[0].backgroundColor = chart.data.datasets[0].backgroundColor;
     chart.config.data.datasets[0].borderColor = chart.data.datasets[0].borderColor;
-    chart.options = {
-        responsive: true,
-        plugins: {
-            title: {
-                display: true,
-                text: 'Chart.js'
-            }
+    chart.config.options = {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: "Chart.js",
         },
-        scales: {
-            x: {
-                display: true
-            },
-            y: {
-                display: true
-            }
-        }
+      },
+      scales: {
+        x: {
+          display: true,
+        },
+        y: {
+          display: true,
+        },
+      },
+      plugins: [scrollButtons, backgroundColor_plugin],
     };
     chart.update();
-}
-updateConfigAsNewObject(myChart);
-
-
-
+  }
 };
-
-document.getElementById("All").addEventListener("click", () => {
-  All();
-});
-
-// Filter with range of values using array datos
-document.getElementById("filter").addEventListener("click", () => {
-  let min = document.getElementById("min").value;
-  let max = document.getElementById("max").value;
-
-  // If min value is greater than max value swap values and show a div with position absolute and a message
-  if (min > max) {
-    let aux = min;
-    min = max;
-    max = aux;
-    alert("El valor minimo no deberia ser mayor al valor maximo");
-  }
-
-  let filter = datos.filter((element) => element >= min && element <= max);
-  let pos = [];
-  for (let i = 0; i < filter.length; i++) {
-    pos.push(datos.indexOf(filter[i]));
-  }
-  myChart.data.labels = pos.map((element) => labels[element]);
-  myChart.data.datasets[0].data = filter;
-  myChart.config.type = "bar";
-  myChart.update();
-});
-
-//When the canva tag size is less than 500px hide the labels
-window.addEventListener("resize", () => {
-  if (window.innerWidth < 500) {
-    myChart.options.scales.x.ticks.display = false;
-    myChart.options.scales.y.ticks.display = false;
-    myChart.update();
-  } else {
-    myChart.options.scales.x.ticks.display = true;
-    myChart.options.scales.y.ticks.display = true;
-    myChart.update();
-  }
-});
-
-//Add border rounded to chart columns with a function autoinvoked
-
-//Show div with class podium when the button controls is clicked
-document.getElementById("controls").addEventListener("click", (e) => {
-  e.preventDefault();
-  document.querySelector(".podium").classList.toggle("show");
-  // after click any button inside the div podium hide the div with class podium
-  document.querySelectorAll(".podium button").forEach((element) => {
-    element.addEventListener("click", () => {
-      document.querySelector(".podium").classList.remove("show");
-    });
+updateConfigAsNewObject(myChart);
+const setEvents = (e) => {
+  alert("carga");
+  document.getElementById("All").addEventListener("click", () => {
+    All();
   });
-  // when click is outside the div podium hide the div with class podium except when click is in the button controls in that case show the div with class podium
-  document.addEventListener("click", (e) => {
-    if (e.target != document.querySelector(".podium") && e.target != document.getElementById("controls")) {
-      document.querySelector(".podium").classList.remove("show");
+
+  // Filter with range of values using array datos
+  document.getElementById("filter").addEventListener("click", () => {
+    let min = document.getElementById("min").value;
+    let max = document.getElementById("max").value;
+
+    // If min value is greater than max value swap values and show a div with position absolute and a message
+    if (min > max) {
+      let aux = min;
+      min = max;
+      max = aux;
+      alert("El valor minimo no deberia ser mayor al valor maximo");
+    }
+
+    let filter = datos.filter((element) => element >= min && element <= max);
+    let pos = [];
+    for (let i = 0; i < filter.length; i++) {
+      pos.push(datos.indexOf(filter[i]));
+    }
+    myChart.data.labels = pos.map((element) => labels[element]);
+    myChart.data.datasets[0].data = filter;
+    myChart.config.type = "bar";
+    myChart.update();
+  });
+
+  //When the canva tag size is less than 500px hide the labels
+  window.addEventListener("resize", () => {
+    if (window.innerWidth < 500) {
+      myChart.options.scales.x.ticks.display = false;
+      myChart.options.scales.y.ticks.display = false;
+      myChart.update();
+    } else {
+      myChart.options.scales.x.ticks.display = true;
+      myChart.options.scales.y.ticks.display = true;
+      myChart.update();
     }
   });
-});
 
-//Change the content of placeholder with id buscador in media queries
-window.addEventListener("resize", () => {
-  if (window.innerWidth <= 320) {
-    document.getElementById("buscador").placeholder = "Nombre";
-    document.getElementById("buscador2").placeholder = "Valor";
-  } else if (window.innerWidth <= 720) {
-    document.getElementById("buscador").placeholder = "Buscar nombre";
-    document.getElementById("buscador2").placeholder = "Buscar valor";
-  } else {
-    document.getElementById("buscador").placeholder = "Buscar por nombre";
-    document.getElementById("buscador2").placeholder = "Buscar por valor";
-  }
-});
+  //Add border rounded to chart columns with a function autoinvoked
 
-//ZoomIn and zoomOut with mouse wheel in chart to show more or less columns and update the chart
-document.getElementById("myChart").addEventListener("wheel", (e) => {
-  if (e.deltaY > 0) {
-    myChart.options.scales.x.min -= 1;
+  //Show div with class podium when the button controls is clicked
+  document.getElementById("controls").addEventListener("click", (e) => {
+    e.preventDefault();
+    document.querySelector(".podium").classList.toggle("show");
+    // after click any button inside the div podium hide the div with class podium
+    document.querySelectorAll(".podium button").forEach((element) => {
+      element.addEventListener("click", () => {
+        document.querySelector(".podium").classList.remove("show");
+      });
+    });
+    // when click is outside the div podium hide the div with class podium except when click is in the button controls in that case show the div with class podium
+    document.addEventListener("click", (e) => {
+      if (e.target != document.querySelector(".podium") && e.target != document.getElementById("controls")) {
+        document.querySelector(".podium").classList.remove("show");
+      }
+    });
+  });
+
+  //Change the content of placeholder with id buscador in media queries
+  window.addEventListener("resize", () => {
+    if (window.innerWidth <= 320) {
+      document.getElementById("buscador").placeholder = "Nombre";
+      document.getElementById("buscador2").placeholder = "Valor";
+    } else if (window.innerWidth <= 720) {
+      document.getElementById("buscador").placeholder = "Buscar nombre";
+      document.getElementById("buscador2").placeholder = "Buscar valor";
+    } else {
+      document.getElementById("buscador").placeholder = "Buscar por nombre";
+      document.getElementById("buscador2").placeholder = "Buscar por valor";
+    }
+  });
+
+  //ZoomIn and zoomOut with mouse wheel in chart to show more or less columns and update the chart
+  document.getElementById("myChart").addEventListener("wheel", (e) => {
+    if (e.deltaY > 0) {
+      myChart.options.scales.x.min -= 1;
+      myChart.update();
+    } else {
+      myChart.options.scales.x.min += 1;
+      myChart.update();
+    }
+  });
+
+  // Radar chart with top 20 values with spread operator
+  document.getElementById("Top20").addEventListener("click", () => {
+    let pos = [];
+    let top20 = [...datos].sort((a, b) => b - a).slice(0, 20);
+    for (let i = 0; i < top20.length; i++) {
+      pos.push(datos.indexOf(top20[i]));
+    }
+    myChart.data.labels = pos.map((element) => labels[element]);
+    myChart.data.datasets[0].data = top20;
+    myChart.config.type = "radar";
     myChart.update();
-  } else {
-    myChart.options.scales.x.min += 1;
-    myChart.update();
-  }
-});
-
-// Radar chart with top 20 values with spread operator
-document.getElementById("Top20").addEventListener("click", () => {
-  let top20 = [...datos].sort((a, b) => b - a).slice(0, 20);
-  let pos = [];
-  for (let i = 0; i < top20.length; i++) {
-    pos.push(datos.indexOf(top20[i]));
-  }
-  myChart.data.labels = pos.map((element) => labels[element]);
-  myChart.data.datasets[0].data = top20;
-  myChart.config.type = "radar";
-  myChart.update();
-});
+  });
+};
